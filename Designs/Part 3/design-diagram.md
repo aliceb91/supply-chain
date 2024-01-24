@@ -1,0 +1,1 @@
+![Supply Chain Part 3.png](Supply%20Chain%20Part%203.png)

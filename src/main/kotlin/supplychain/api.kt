@@ -37,6 +37,24 @@ val app: HttpHandler = routes(
                 Response(OK).body(data.asJsonObject().toString())
             }
         }
+    },
+
+    "/target_supplier" bind GET to { req: Request ->
+        val supplyChainRepo: SupplyChainRepo = SupplyChainRepoJson()
+        val userRepo: UserRepo = UserRepoJson()
+        val domain = Domain(userRepo, supplyChainRepo)
+        val userId = req.header("userId")
+        val targetCompanyId = req.header("targetCompanyId")
+        if (userId == null || targetCompanyId == null) {
+            Response(BAD_REQUEST)
+        } else {
+            val data: Map<String, *> = domain.fetchDirectSupplier(userId, targetCompanyId)
+            if (data["companyId"] == "null") {
+                Response(NOT_FOUND)
+            } else {
+                Response(OK).body(data.asJsonObject().toString())
+            }
+        }
     }
 )
 
