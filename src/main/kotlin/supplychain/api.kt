@@ -1,21 +1,18 @@
 package supplychain
 
 import com.fasterxml.jackson.databind.JsonNode
-import org.http4k.core.HttpHandler
+import org.http4k.core.*
 import org.http4k.core.Method.GET
-import org.http4k.core.Request
-import org.http4k.core.Response
+import org.http4k.core.Method.POST
 import org.http4k.core.Status.Companion.OK
-import org.http4k.core.then
 import org.http4k.filter.DebuggingFilters.PrintRequest
 import org.http4k.routing.bind
 import org.http4k.routing.routes
 import org.http4k.server.SunHttp
 import org.http4k.server.asServer
-import org.http4k.core.Body
 import org.http4k.core.Status.Companion.BAD_REQUEST
 import org.http4k.core.Status.Companion.NOT_FOUND
-import org.http4k.core.with
+import org.http4k.core.Status.Companion.CONFLICT
 import org.http4k.format.Jackson.asJsonObject
 import org.http4k.format.Jackson.asJsonValue
 import org.http4k.format.Jackson.asPrettyJsonString
@@ -50,6 +47,26 @@ val app: HttpHandler = routes(
         } else {
             val data: Map<String, *> = domain.fetchDirectSupplier(userId, targetCompanyId)
             if (data["companyId"] == "null") {
+                Response(NOT_FOUND)
+            } else {
+                Response(OK).body(data.asJsonObject().toString())
+            }
+        }
+    },
+
+    "/add_direct_supplier" bind POST to { req: Request ->
+       val supplyChainRepo: SupplyChainRepo = SupplyChainRepoJson()
+        val userRepo: UserRepo = UserRepoJson()
+        val domain = Domain(userRepo, supplyChainRepo)
+        val userId = req.header("userId")
+        val targetCompanyId = req.header("targetCompanyId")
+        if (userId == null || targetCompanyId == null) {
+            Response(BAD_REQUEST)
+        } else {
+            val data: Map<String, *> = domain.addDirectSupplierToChain(userId, targetCompanyId)
+            if (data["companyId"] == "conflict") {
+                Response(CONFLICT)
+            } else if (data["companyId"] == "null") {
                 Response(NOT_FOUND)
             } else {
                 Response(OK).body(data.asJsonObject().toString())

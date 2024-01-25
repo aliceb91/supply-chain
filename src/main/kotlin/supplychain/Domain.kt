@@ -32,4 +32,20 @@ class Domain(val userRepo: UserRepo, val supplyChainRepo: SupplyChainRepo) {
         }
         return supplyChainRepo.fetchDirectSupplierById(targetCompanyId)
     }
+
+    fun addDirectSupplierToChain(userId: String, targetCompanyId: String): Map<String, *> {
+        val companyId = userRepo.fetchUserCompanyId(userId)
+        if (companyId == "null") {
+            return mapOf(
+                "companyId" to "null"
+            )
+        }
+        val directSuppliers = supplyChainRepo.fetchDirectSupplyChain(companyId)
+        if (targetCompanyId in directSuppliers) {
+            return mapOf(
+                "companyId" to "conflict"
+            )
+        }
+        return supplyChainRepo.addDirectSupplierById(companyId, targetCompanyId)
+    }
 }

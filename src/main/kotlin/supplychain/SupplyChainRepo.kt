@@ -4,5 +4,7 @@ interface SupplyChainRepo {
 
     fun fetchDirectSupplyChain(companyId: String): List<String>
 
-    fun fetchDirectSupplierById(companyId: String): Map<String, *>
+    fun fetchDirectSupplierById(targetCompanyId: String): Map<String, *>
+
+    fun addDirectSupplierById(companyId: String, targetCompanyId: String): Map<String, *>
 }

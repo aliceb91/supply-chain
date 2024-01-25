@@ -32,12 +32,12 @@ Test 2:
 
 Test 3:
 
-- Somehow set things up do that no userId is provided to the domain
+- Somehow set things up so that no userId is provided to the domain
 - When we query the API with no given userId
 - Then assert that the response is that of a bad request
 
 Test 4:
 
-- Somehow set things up do that an invalid userId is provided to the domain
+- Somehow set things up so that an invalid userId is provided to the domain
 - When we query the API with an invalid userId
 - Then assert that the response is that of not found

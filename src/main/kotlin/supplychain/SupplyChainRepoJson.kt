@@ -8,7 +8,7 @@ import java.nio.file.Paths
 
 class SupplyChainRepoJson(): SupplyChainRepo {
 
-    val data: String = """
+    var data: String = """
        [
          {
            "companyId": "ZC789",
@@ -44,6 +44,36 @@ class SupplyChainRepoJson(): SupplyChainRepo {
         val jsonTextList: List<CompanyModel> = mapper.readValue<List<CompanyModel>>(data)
         val company = jsonTextList.filter {
             it.companyId == targetCompanyId
+        }.first()
+        return mapOf(
+            "companyId" to company.companyId,
+            "buyers" to company.buyers,
+            "suppliers" to company.suppliers
+        )
+    }
+
+    override fun addDirectSupplierById(companyId: String, targetCompanyId: String): Map<String, *> {
+        val mapper = jacksonObjectMapper()
+        mapper.registerKotlinModule()
+        val jsonTextList: List<CompanyModel> = mapper.readValue<List<CompanyModel>>(data)
+        val targetCompany: List<CompanyModel> = jsonTextList.filter {
+            it.companyId == targetCompanyId
+        }
+        if (targetCompany.isEmpty()) {
+            return mapOf(
+                "companyId" to "null"
+            )
+        }
+        val updatedList: List<CompanyModel> = jsonTextList.map {
+            if (it.companyId == companyId) {
+                it.suppliers.add(targetCompanyId)
+            }
+            it
+        }
+        data = mapper.writeValueAsString(updatedList)
+        val newJsonList: List<CompanyModel> = mapper.readValue<List<CompanyModel>>(data)
+        val company: CompanyModel = newJsonList.filter {
+            it.companyId == companyId
         }.first()
         return mapOf(
             "companyId" to company.companyId,
