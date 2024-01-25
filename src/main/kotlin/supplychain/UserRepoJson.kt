@@ -1,13 +1,13 @@
 package supplychain
 
-import java.io.File
+//import java.io.File
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 
-class UserRepoJson(): UserRepo {
+class UserRepoJson: UserRepo {
 
-    val data: String = """
+    private val data: String = """
         [
           {
             "userId": "ZU123",
@@ -15,19 +15,16 @@ class UserRepoJson(): UserRepo {
           }
         ]
     """.trimIndent()
-
-    override fun fetchUserCompanyId(userId: String): String {
-        val mapper = jacksonObjectMapper()
-        mapper.registerKotlinModule()
+    private val mapper = jacksonObjectMapper().registerKotlinModule()
+    override fun fetchUserCompanyId(userId: String): String? {
         val jsonTextList: List<UserModel> = mapper.readValue<List<UserModel>>(data)
         val user: List<UserModel> = jsonTextList.filter {
             it.userId == userId
         }
         if (user.isEmpty()) {
-            return "null"
-        } else {
-            return user.first().companyId
+            return null
         }
+        return user.first().companyId
     }
 
 //    override fun fetchUserCompanyId(userId: String): String {

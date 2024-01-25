@@ -42,8 +42,8 @@ class DomainTest {
         @Test
         fun `given an invalid userId it returns a map with a single null entry for companyId`() {
             class MockUserRepo: UserRepo {
-                override fun fetchUserCompanyId(userId: String): String {
-                    return "null"
+                override fun fetchUserCompanyId(userId: String): String? {
+                    return null
                 }
             }
             class MockSupplyChainRepo: SupplyChainRepo {
@@ -59,6 +59,14 @@ class DomainTest {
                     TODO()
                 }
             }
+            val mockUserRepo: UserRepo = MockUserRepo()
+            val mockSupplyChainRepo: SupplyChainRepo = MockSupplyChainRepo()
+            val underTest = Domain(mockUserRepo, mockSupplyChainRepo)
+            val expected: Map<String, *> = mapOf(
+                "companyId" to "notFound"
+            )
+            val result = underTest.fetchDirectSuppliers("ZU321")
+            assertEquals(expected, result)
         }
     }
 
@@ -129,7 +137,7 @@ class DomainTest {
             val mockSupplyChainRepo: SupplyChainRepo = MockSupplyChainRepo()
             val underTest = Domain(mockUserRepo, mockSupplyChainRepo)
             val expected: Map<String, *> = mapOf(
-                "companyId" to "null"
+                "companyId" to "notFound"
             )
             val result: Map<String, *> = underTest.fetchDirectSupplier("ZU123", "ZS654")
             assertEquals(expected, result)
@@ -138,8 +146,8 @@ class DomainTest {
         @Test
         fun `given a userId that does not exist in the system, it returns a null map`() {
             class MockUserRepo: UserRepo {
-                override fun fetchUserCompanyId(userId: String): String {
-                    return "null"
+                override fun fetchUserCompanyId(userId: String): String? {
+                    return null
                 }
             }
             class MockSupplyChainRepo: SupplyChainRepo {
@@ -163,7 +171,7 @@ class DomainTest {
             val mockSupplyChainRepo: SupplyChainRepo = MockSupplyChainRepo()
             val underTest = Domain(mockUserRepo, mockSupplyChainRepo)
             val expected: Map<String, *> = mapOf(
-                "companyId" to "null"
+                "companyId" to "notFound"
             )
             val result: Map<String, *> = underTest.fetchDirectSupplier("hello", "ZS456")
             assertEquals(expected, result)
@@ -198,7 +206,7 @@ class DomainTest {
                     return mapOf(
                         "companyId" to "ZC789",
                         "buyers" to listOf<String>(),
-                        "suppliers" to listOf<String>("ZS456", "ZS654")
+                        "suppliers" to listOf("ZS456", "ZS654")
                     )
                 }
             }
@@ -208,14 +216,14 @@ class DomainTest {
             val expected: Map<String, *> = mapOf(
                 "companyId" to "ZC789",
                 "buyers" to listOf<String>(),
-                "suppliers" to listOf<String>("ZS456", "ZS654")
+                "suppliers" to listOf("ZS456", "ZS654")
             )
             val result: Map<String, *> = underTest.addDirectSupplierToChain("ZU123", "ZS654")
             assertEquals(expected, result)
         }
 
         @Test
-        fun `given a targetId that is alrady present in direct suppliers, it returns a conflict map`() {
+        fun `given a targetId that is already present in direct suppliers, it returns a conflict map`() {
 
             class MockUserRepo : UserRepo {
                 override fun fetchUserCompanyId(userId: String): String {
@@ -240,7 +248,7 @@ class DomainTest {
                     return mapOf(
                         "companyId" to "ZC789",
                         "buyers" to listOf<String>(),
-                        "suppliers" to listOf<String>("ZS456", "ZS654")
+                        "suppliers" to listOf("ZS456", "ZS654")
                     )
                 }
             }
@@ -278,7 +286,7 @@ class DomainTest {
 
                 override fun addDirectSupplierById(companyId: String, targetCompanyId: String): Map<String, *> {
                     return mapOf(
-                        "companyId" to "null"
+                        "companyId" to "notFound"
                     )
                 }
             }
@@ -287,7 +295,7 @@ class DomainTest {
             val mockSupplyChainRepo: SupplyChainRepo = MockSupplyChainRepo()
             val underTest = Domain(mockUserRepo, mockSupplyChainRepo)
             val expected: Map<String, *> = mapOf(
-                "companyId" to "null"
+                "companyId" to "notFound"
             )
             val result: Map<String, *> = underTest.addDirectSupplierToChain("ZU123", "ZS987")
             assertEquals(expected, result)

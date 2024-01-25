@@ -1,7 +1,5 @@
 package supplychain
 
-import com.fasterxml.jackson.databind.JsonNode
-import org.http4k.core.Method
 import org.http4k.core.Method.GET
 import org.http4k.core.Method.POST
 import org.http4k.core.Request
@@ -33,7 +31,7 @@ class ApiTest {
 
         @Test
         fun `given no userId provided, it returns a bad request code`() {
-            val expected: Response = Response(BAD_REQUEST)
+            val expected = Response(BAD_REQUEST)
             val result: Response = app(Request(GET, "/suppliers?type=direct"))
             assertEquals(expected, result)
         }
@@ -52,7 +50,7 @@ class ApiTest {
 
         @Test
         fun `given an invalid userId, it returns a not found code`() {
-            val expected: Response = Response(NOT_FOUND)
+            val expected = Response(NOT_FOUND)
             val result: Response = app(Request(GET, "/suppliers?type=direct")
                 .header("userId", "hello")
             )
@@ -79,7 +77,7 @@ class ApiTest {
 
         @Test
         fun `given a valid userId and an invalid target companyId it returns not found`() {
-            val expected: Response = Response(NOT_FOUND)
+            val expected = Response(NOT_FOUND)
             val result: Response = app(Request(GET, "/target_supplier?type=direct")
                 .header("userId", "ZU123")
                 .header("targetCompanyId", "ZS654")
@@ -89,7 +87,7 @@ class ApiTest {
 
         @Test
         fun `given a valid userId but no target companyId it returns bad request`() {
-            val expected: Response = Response(BAD_REQUEST)
+            val expected = Response(BAD_REQUEST)
             val result: Response = app(Request(GET, "/target_supplier?type=direct")
                 .header("userId", "ZU123")
             )
@@ -98,7 +96,7 @@ class ApiTest {
 
         @Test
         fun `given a valid companyId but no userId, it returns bad request`() {
-            val expected: Response = Response(BAD_REQUEST)
+            val expected = Response(BAD_REQUEST)
             val result: Response = app(Request(GET, "target_supplier?type=direct")
                 .header("targetCompanyId", "ZS654")
             )
@@ -114,7 +112,7 @@ class ApiTest {
             val expected: String = mapOf(
                 "companyId" to "ZC789",
                 "buyers" to listOf<String>(),
-                "suppliers" to listOf<String>("ZS456", "ZS654")
+                "suppliers" to listOf("ZS456", "ZS654")
             ).asJsonObject().toString()
             val result: String = app(Request(POST, "/add_direct_supplier")
                 .header("userId", "ZU123")
@@ -125,7 +123,7 @@ class ApiTest {
 
         @Test
         fun `given a valid companyId that already exists in the users supply chain, it returns a conflict status`() {
-            val expected: Response = Response(CONFLICT)
+            val expected = Response(CONFLICT)
             val result: Response = app(Request(POST, "/add_direct_supplier")
                 .header("userId", "ZU123")
                 .header("targetCompanyId", "ZS456")
@@ -135,7 +133,7 @@ class ApiTest {
 
         @Test
         fun `given a companyId that doesnt exist in the database, it returns not found`() {
-            val expected: Response = Response(NOT_FOUND)
+            val expected = Response(NOT_FOUND)
             val result: Response = app(Request(POST, "/add_direct_supplier")
                 .header("userId", "ZU123")
                 .header("targetCompanyId", "ZS987")
@@ -145,7 +143,7 @@ class ApiTest {
 
         @Test
         fun `given a request with no userId, it returns a bad request`() {
-            val expected: Response = Response(BAD_REQUEST)
+            val expected = Response(BAD_REQUEST)
             val result: Response = app(Request(POST, "/add_direct_supplier")
                 .header("targetCompanyId", "ZS654")
             )
@@ -154,7 +152,7 @@ class ApiTest {
 
         @Test
         fun `given a request with an invalid userId, it returns not found`() {
-            val expected: Response = Response(NOT_FOUND)
+            val expected = Response(NOT_FOUND)
             val result: Response = app(Request(POST, "/add_direct_supplier")
                 .header("userId", "ZC321")
                 .header("targetCompanyId", "ZS654")

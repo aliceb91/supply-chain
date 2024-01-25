@@ -1,6 +1,0 @@
-package supplychain
-
-class SupplyChainRepoJsonTest {
-
-
-}

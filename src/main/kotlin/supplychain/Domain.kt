@@ -1,33 +1,28 @@
 package supplychain
 
-class Domain(val userRepo: UserRepo, val supplyChainRepo: SupplyChainRepo) {
+class Domain(private val userRepo: UserRepo, private val supplyChainRepo: SupplyChainRepo) {
 
     fun fetchDirectSuppliers(userId: String): Map<String, *> {
         val companyId = userRepo.fetchUserCompanyId(userId)
-        if (companyId == "null") {
-            return mapOf(
-                "companyId" to "null"
+            ?: return mapOf(
+                "companyId" to "notFound"
             )
-        } else {
-            val directSuppliers = supplyChainRepo.fetchDirectSupplyChain(companyId)
-            return mapOf(
-                "companyId" to companyId,
-                "directSuppliers" to directSuppliers
-            )
-        }
+        val directSuppliers = supplyChainRepo.fetchDirectSupplyChain(companyId)
+        return mapOf(
+            "companyId" to companyId,
+            "directSuppliers" to directSuppliers
+        )
     }
 
     fun fetchDirectSupplier(userId: String, targetCompanyId: String): Map<String, *> {
         val companyId = userRepo.fetchUserCompanyId(userId)
-        if (companyId == "null") {
-            return mapOf(
-                "companyId" to "null"
+            ?: return mapOf(
+                "companyId" to "notFound"
             )
-        }
         val directSuppliers = supplyChainRepo.fetchDirectSupplyChain(companyId)
         if (targetCompanyId !in directSuppliers) {
             return mapOf(
-                "companyId" to "null"
+                "companyId" to "notFound"
             )
         }
         return supplyChainRepo.fetchDirectSupplierById(targetCompanyId)
@@ -35,11 +30,9 @@ class Domain(val userRepo: UserRepo, val supplyChainRepo: SupplyChainRepo) {
 
     fun addDirectSupplierToChain(userId: String, targetCompanyId: String): Map<String, *> {
         val companyId = userRepo.fetchUserCompanyId(userId)
-        if (companyId == "null") {
-            return mapOf(
-                "companyId" to "null"
+            ?: return mapOf(
+                "companyId" to "notFound"
             )
-        }
         val directSuppliers = supplyChainRepo.fetchDirectSupplyChain(companyId)
         if (targetCompanyId in directSuppliers) {
             return mapOf(

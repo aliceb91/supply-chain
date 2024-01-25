@@ -3,12 +3,12 @@ package supplychain
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import java.io.File
-import java.nio.file.Paths
+//import java.io.File
+//import java.nio.file.Paths
 
-class SupplyChainRepoJson(): SupplyChainRepo {
+class SupplyChainRepoJson: SupplyChainRepo {
 
-    var data: String = """
+    private var data: String = """
        [
          {
            "companyId": "ZC789",
@@ -27,24 +27,21 @@ class SupplyChainRepoJson(): SupplyChainRepo {
          }
        ]
     """.trimIndent()
+    private val mapper = jacksonObjectMapper().registerKotlinModule()
 
     override fun fetchDirectSupplyChain(companyId: String): List<String> {
-        val mapper = jacksonObjectMapper()
-        mapper.registerKotlinModule()
         val jsonTextList: List<CompanyModel> = mapper.readValue<List<CompanyModel>>(data)
-        val company = jsonTextList.filter {
+        val company = jsonTextList.first {
             it.companyId == companyId
-        }.first()
+        }
         return company.suppliers
     }
 
     override fun fetchDirectSupplierById(targetCompanyId: String): Map<String, *> {
-        val mapper = jacksonObjectMapper()
-        mapper.registerKotlinModule()
         val jsonTextList: List<CompanyModel> = mapper.readValue<List<CompanyModel>>(data)
-        val company = jsonTextList.filter {
+        val company = jsonTextList.first {
             it.companyId == targetCompanyId
-        }.first()
+        }
         return mapOf(
             "companyId" to company.companyId,
             "buyers" to company.buyers,
@@ -53,15 +50,13 @@ class SupplyChainRepoJson(): SupplyChainRepo {
     }
 
     override fun addDirectSupplierById(companyId: String, targetCompanyId: String): Map<String, *> {
-        val mapper = jacksonObjectMapper()
-        mapper.registerKotlinModule()
         val jsonTextList: List<CompanyModel> = mapper.readValue<List<CompanyModel>>(data)
         val targetCompany: List<CompanyModel> = jsonTextList.filter {
             it.companyId == targetCompanyId
         }
         if (targetCompany.isEmpty()) {
             return mapOf(
-                "companyId" to "null"
+                "companyId" to "notFound"
             )
         }
         val updatedList: List<CompanyModel> = jsonTextList.map {
@@ -72,9 +67,9 @@ class SupplyChainRepoJson(): SupplyChainRepo {
         }
         data = mapper.writeValueAsString(updatedList)
         val newJsonList: List<CompanyModel> = mapper.readValue<List<CompanyModel>>(data)
-        val company: CompanyModel = newJsonList.filter {
+        val company: CompanyModel = newJsonList.first {
             it.companyId == companyId
-        }.first()
+        }
         return mapOf(
             "companyId" to company.companyId,
             "buyers" to company.buyers,
