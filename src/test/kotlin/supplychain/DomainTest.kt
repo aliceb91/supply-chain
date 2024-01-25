@@ -20,7 +20,7 @@ class DomainTest {
                     return listOf("ZS456")
                 }
 
-                override fun fetchDirectSupplierById(companyId: String): Map<String, *> {
+                override fun fetchDirectSupplierById(targetCompanyId: String): Map<String, *> {
                     TODO()
                 }
 
@@ -51,7 +51,7 @@ class DomainTest {
                     return listOf()
                 }
 
-                override fun fetchDirectSupplierById(companyId: String): Map<String, *> {
+                override fun fetchDirectSupplierById(targetCompanyId: String): Map<String, *> {
                     TODO()
                 }
 
@@ -77,7 +77,7 @@ class DomainTest {
                     return listOf("ZS456")
                 }
 
-                override fun fetchDirectSupplierById(companyId: String): Map<String, *> {
+                override fun fetchDirectSupplierById(targetCompanyId: String): Map<String, *> {
                     return mapOf(
                         "companyId" to "ZS456",
                         "buyers" to listOf<String>(),
@@ -113,7 +113,7 @@ class DomainTest {
                     return listOf("ZS456")
                 }
 
-                override fun fetchDirectSupplierById(companyId: String): Map<String, *> {
+                override fun fetchDirectSupplierById(targetCompanyId: String): Map<String, *> {
                     return mapOf(
                         "companyId" to "ZS456",
                         "buyers" to listOf<String>(),
@@ -147,7 +147,7 @@ class DomainTest {
                     return listOf("ZS456")
                 }
 
-                override fun fetchDirectSupplierById(companyId: String): Map<String, *> {
+                override fun fetchDirectSupplierById(targetCompanyId: String): Map<String, *> {
                     return mapOf(
                         "companyId" to "ZS456",
                         "buyers" to listOf<String>(),
@@ -186,7 +186,7 @@ class DomainTest {
                     return listOf("ZS456")
                 }
 
-                override fun fetchDirectSupplierById(companyId: String): Map<String, *> {
+                override fun fetchDirectSupplierById(targetCompanyId: String): Map<String, *> {
                     return mapOf(
                         "companyId" to "ZS456",
                         "buyers" to listOf<String>(),
@@ -228,7 +228,7 @@ class DomainTest {
                     return listOf("ZS456")
                 }
 
-                override fun fetchDirectSupplierById(companyId: String): Map<String, *> {
+                override fun fetchDirectSupplierById(targetCompanyId: String): Map<String, *> {
                     return mapOf(
                         "companyId" to "ZS456",
                         "buyers" to listOf<String>(),
@@ -268,7 +268,7 @@ class DomainTest {
                     return listOf("ZS456")
                 }
 
-                override fun fetchDirectSupplierById(companyId: String): Map<String, *> {
+                override fun fetchDirectSupplierById(targetCompanyId: String): Map<String, *> {
                     return mapOf(
                         "companyId" to "ZS456",
                         "buyers" to listOf<String>(),
