@@ -16,7 +16,7 @@ class DomainTest {
                 }
             }
             class MockSupplyChainRepo: SupplyChainRepo {
-                override fun fetchDirectSupplyChain(companyId: String): List<String> {
+                override fun fetchDirectSuppliers(companyId: String): List<String> {
                     return listOf("ZS456")
                 }
 
@@ -47,7 +47,7 @@ class DomainTest {
                 }
             }
             class MockSupplyChainRepo: SupplyChainRepo {
-                override fun fetchDirectSupplyChain(companyId: String): List<String> {
+                override fun fetchDirectSuppliers(companyId: String): List<String> {
                     return listOf()
                 }
 
@@ -81,7 +81,7 @@ class DomainTest {
                 }
             }
             class MockSupplyChainRepo: SupplyChainRepo {
-                override fun fetchDirectSupplyChain(companyId: String): List<String> {
+                override fun fetchDirectSuppliers(companyId: String): List<String> {
                     return listOf("ZS456")
                 }
 
@@ -117,7 +117,7 @@ class DomainTest {
                 }
             }
             class MockSupplyChainRepo: SupplyChainRepo {
-                override fun fetchDirectSupplyChain(companyId: String): List<String> {
+                override fun fetchDirectSuppliers(companyId: String): List<String> {
                     return listOf("ZS456")
                 }
 
@@ -151,7 +151,7 @@ class DomainTest {
                 }
             }
             class MockSupplyChainRepo: SupplyChainRepo {
-                override fun fetchDirectSupplyChain(companyId: String): List<String> {
+                override fun fetchDirectSuppliers(companyId: String): List<String> {
                     return listOf("ZS456")
                 }
 
@@ -190,7 +190,7 @@ class DomainTest {
                 }
             }
             class MockSupplyChainRepo: SupplyChainRepo {
-                override fun fetchDirectSupplyChain(companyId: String): List<String> {
+                override fun fetchDirectSuppliers(companyId: String): List<String> {
                     return listOf("ZS456")
                 }
 
@@ -232,7 +232,7 @@ class DomainTest {
             }
 
             class MockSupplyChainRepo : SupplyChainRepo {
-                override fun fetchDirectSupplyChain(companyId: String): List<String> {
+                override fun fetchDirectSuppliers(companyId: String): List<String> {
                     return listOf("ZS456")
                 }
 
@@ -272,7 +272,7 @@ class DomainTest {
             }
 
             class MockSupplyChainRepo : SupplyChainRepo {
-                override fun fetchDirectSupplyChain(companyId: String): List<String> {
+                override fun fetchDirectSuppliers(companyId: String): List<String> {
                     return listOf("ZS456")
                 }
 

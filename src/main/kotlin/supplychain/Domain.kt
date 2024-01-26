@@ -7,7 +7,7 @@ class Domain(private val userRepo: UserRepo, private val supplyChainRepo: Supply
             ?: return mapOf(
                 "companyId" to "notFound"
             )
-        val directSuppliers = supplyChainRepo.fetchDirectSupplyChain(companyId)
+        val directSuppliers = supplyChainRepo.fetchDirectSuppliers(companyId)
         return mapOf(
             "companyId" to companyId,
             "directSuppliers" to directSuppliers
@@ -19,7 +19,7 @@ class Domain(private val userRepo: UserRepo, private val supplyChainRepo: Supply
             ?: return mapOf(
                 "companyId" to "notFound"
             )
-        val directSuppliers = supplyChainRepo.fetchDirectSupplyChain(companyId)
+        val directSuppliers = supplyChainRepo.fetchDirectSuppliers(companyId)
         if (targetCompanyId !in directSuppliers) {
             return mapOf(
                 "companyId" to "notFound"
@@ -33,7 +33,7 @@ class Domain(private val userRepo: UserRepo, private val supplyChainRepo: Supply
             ?: return mapOf(
                 "companyId" to "notFound"
             )
-        val directSuppliers = supplyChainRepo.fetchDirectSupplyChain(companyId)
+        val directSuppliers = supplyChainRepo.fetchDirectSuppliers(companyId)
         if (targetCompanyId in directSuppliers) {
             return mapOf(
                 "companyId" to "conflict"

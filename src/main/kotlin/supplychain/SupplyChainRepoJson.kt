@@ -29,7 +29,7 @@ class SupplyChainRepoJson: SupplyChainRepo {
     """.trimIndent()
     private val mapper = jacksonObjectMapper().registerKotlinModule()
 
-    override fun fetchDirectSupplyChain(companyId: String): List<String> {
+    override fun fetchDirectSuppliers(companyId: String): List<String> {
         val jsonTextList: List<CompanyModel> = mapper.readValue<List<CompanyModel>>(data)
         val company = jsonTextList.first {
             it.companyId == companyId

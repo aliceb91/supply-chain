@@ -2,7 +2,7 @@ package supplychain
 
 interface SupplyChainRepo {
 
-    fun fetchDirectSupplyChain(companyId: String): List<String>
+    fun fetchDirectSuppliers(companyId: String): List<String>
 
     fun fetchDirectSupplierById(targetCompanyId: String): Map<String, *>
 
