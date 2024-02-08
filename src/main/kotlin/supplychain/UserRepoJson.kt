@@ -16,6 +16,7 @@ class UserRepoJson: UserRepo {
         ]
     """.trimIndent()
     private val mapper = jacksonObjectMapper().registerKotlinModule()
+
     override fun fetchUserCompanyId(userId: String): String? {
         val jsonTextList: List<UserModel> = mapper.readValue<List<UserModel>>(data)
         val user: List<UserModel> = jsonTextList.filter {

@@ -2,43 +2,56 @@ package supplychain
 
 class Domain(private val userRepo: UserRepo, private val supplyChainRepo: SupplyChainRepo) {
 
-    fun fetchDirectSuppliers(userId: String): Map<String, *> {
-        val companyId = userRepo.fetchUserCompanyId(userId)
-            ?: return mapOf(
-                "companyId" to "notFound"
-            )
-        val directSuppliers = supplyChainRepo.fetchDirectSuppliers(companyId)
-        return mapOf(
-            "companyId" to companyId,
-            "directSuppliers" to directSuppliers
-        )
-    }
-
-    fun fetchDirectSupplier(userId: String, targetCompanyId: String): Map<String, *> {
-        val companyId = userRepo.fetchUserCompanyId(userId)
-            ?: return mapOf(
-                "companyId" to "notFound"
-            )
-        val directSuppliers = supplyChainRepo.fetchDirectSuppliers(companyId)
-        if (targetCompanyId !in directSuppliers) {
-            return mapOf(
-                "companyId" to "notFound"
-            )
+    fun fetchDirectSuppliers(userId: String): SupplyChainModel {
+        val model = SupplyChainModel()
+        val companyId: String? = userRepo.fetchUserCompanyId(userId)
+        if (companyId == null) {
+            return model
         }
-        return supplyChainRepo.fetchDirectSupplierById(targetCompanyId)
+        val directSuppliers: List<String>? = supplyChainRepo.fetchDirectSuppliers(companyId)
+        model.companyId = companyId
+        model.suppliers = directSuppliers
+        return model
     }
 
-    fun addDirectSupplierToChain(userId: String, targetCompanyId: String): Map<String, *> {
+    fun fetchDirectSupplier(userId: String, targetCompanyId: String): SupplyChainModel {
+        val model = SupplyChainModel()
         val companyId = userRepo.fetchUserCompanyId(userId)
-            ?: return mapOf(
-                "companyId" to "notFound"
-            )
+        if (companyId == null) {
+            return model
+        }
+        val directSuppliers = supplyChainRepo.fetchDirectSuppliers(companyId)
+        if (directSuppliers.contains(targetCompanyId) == false) {
+            return model
+        }
+        val targetDirectSupplier = supplyChainRepo.fetchDirectSupplierById(targetCompanyId)
+        if (targetDirectSupplier == null) {
+            return model
+        }
+        model.companyId = targetDirectSupplier.companyId
+        model.buyers = targetDirectSupplier.buyers
+        model.suppliers = targetDirectSupplier.suppliers
+        return model
+    }
+
+    fun addDirectSupplierToChain(userId: String, targetCompanyId: String): SupplyChainModel {
+        val model = SupplyChainModel()
+        val companyId = userRepo.fetchUserCompanyId(userId)
+        if (companyId === null) {
+            return model
+        }
         val directSuppliers = supplyChainRepo.fetchDirectSuppliers(companyId)
         if (targetCompanyId in directSuppliers) {
-            return mapOf(
-                "companyId" to "conflict"
-            )
+            model.companyId = "conflict"
+            return model
         }
-        return supplyChainRepo.addDirectSupplierById(companyId, targetCompanyId)
+        val updatedCompany = supplyChainRepo.addDirectSupplierById(companyId, targetCompanyId)
+        if (updatedCompany === null) {
+            return model
+        }
+        model.companyId = updatedCompany.companyId
+        model.buyers = updatedCompany.buyers
+        model.suppliers = updatedCompany.suppliers
+        return model
     }
 }

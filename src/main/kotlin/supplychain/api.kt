@@ -1,4 +1,4 @@
-package supplychain
+                                package supplychain
 
 import org.http4k.core.*
 import org.http4k.core.Method.GET
@@ -23,11 +23,15 @@ val app: HttpHandler = routes(
         if (userId == null) {
             Response(BAD_REQUEST)
         } else {
-            val data: Map<String, *> = domain.fetchDirectSuppliers(userId)
-            if (data["companyId"] == "notFound") {
+            val data: SupplyChainModel = domain.fetchDirectSuppliers(userId)
+            if (data.companyId == null) {
                 Response(NOT_FOUND)
             } else {
-                Response(OK).body(data.asJsonObject().toString())
+                val responseData = mapOf(
+                    "companyId" to data.companyId,
+                    "suppliers" to data.suppliers
+                )
+                Response(OK).body(responseData.asJsonObject().toString())
             }
         }
     },
@@ -41,11 +45,16 @@ val app: HttpHandler = routes(
         if (userId == null || targetCompanyId == null) {
             Response(BAD_REQUEST)
         } else {
-            val data: Map<String, *> = domain.fetchDirectSupplier(userId, targetCompanyId)
-            if (data["companyId"] == "notFound") {
+            val data: SupplyChainModel = domain.fetchDirectSupplier(userId, targetCompanyId)
+            if (data.companyId == null) {
                 Response(NOT_FOUND)
             } else {
-                Response(OK).body(data.asJsonObject().toString())
+                val responseData = mapOf(
+                    "companyId" to data.companyId,
+                    "buyers" to data.buyers,
+                    "suppliers" to data.suppliers
+                )
+                Response(OK).body(responseData.asJsonObject().toString())
             }
         }
     },
@@ -59,12 +68,17 @@ val app: HttpHandler = routes(
         if (userId == null || targetCompanyId == null) {
             Response(BAD_REQUEST)
         } else {
-            val data: Map<String, *> = domain.addDirectSupplierToChain(userId, targetCompanyId)
-            if (data["companyId"] == "conflict") {
+            val data: SupplyChainModel = domain.addDirectSupplierToChain(userId, targetCompanyId)
+            if (data.companyId == "conflict") {
                 Response(CONFLICT)
-            } else if (data["companyId"] == "notFound") {
+            } else if (data.companyId == null) {
                 Response(NOT_FOUND)
             } else {
+                val responseData = mapOf(
+                    "companyId" to data.companyId,
+                    "buyers" to data.buyers,
+                    "suppliers" to data.suppliers
+                )
                 Response(OK).body(data.asJsonObject().toString())
             }
         }

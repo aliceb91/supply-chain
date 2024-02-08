@@ -37,27 +37,24 @@ class SupplyChainRepoJson: SupplyChainRepo {
         return company.suppliers
     }
 
-    override fun fetchDirectSupplierById(targetCompanyId: String): Map<String, *> {
+    override fun fetchDirectSupplierById(targetCompanyId: String): CompanyModel? {
         val jsonTextList: List<CompanyModel> = mapper.readValue<List<CompanyModel>>(data)
-        val company = jsonTextList.first {
+        val companyList = jsonTextList.filter {
             it.companyId == targetCompanyId
         }
-        return mapOf(
-            "companyId" to company.companyId,
-            "buyers" to company.buyers,
-            "suppliers" to company.suppliers
-        )
+        if (companyList.isEmpty()) {
+            return null
+        }
+        return companyList[0]
     }
 
-    override fun addDirectSupplierById(companyId: String, targetCompanyId: String): Map<String, *> {
+    override fun addDirectSupplierById(companyId: String, targetCompanyId: String): CompanyModel? {
         val jsonTextList: List<CompanyModel> = mapper.readValue<List<CompanyModel>>(data)
         val targetCompany: List<CompanyModel> = jsonTextList.filter {
             it.companyId == targetCompanyId
         }
         if (targetCompany.isEmpty()) {
-            return mapOf(
-                "companyId" to "notFound"
-            )
+            return null
         }
         val updatedList: List<CompanyModel> = jsonTextList.map {
             if (it.companyId == companyId) {
@@ -67,14 +64,9 @@ class SupplyChainRepoJson: SupplyChainRepo {
         }
         data = mapper.writeValueAsString(updatedList)
         val newJsonList: List<CompanyModel> = mapper.readValue<List<CompanyModel>>(data)
-        val company: CompanyModel = newJsonList.first {
+        return  newJsonList.first {
             it.companyId == companyId
         }
-        return mapOf(
-            "companyId" to company.companyId,
-            "buyers" to company.buyers,
-            "suppliers" to company.suppliers
-        )
     }
 
 //    override fun fetchDirectSupplyChain(companyId: String): List<String> {
