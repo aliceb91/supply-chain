@@ -21,7 +21,7 @@ class ApiTest {
         fun `given a userId, it returns a list of direct suppliers for that users company`() {
             val expected: String = mapOf(
                 "companyId" to "ZC789",
-                "directSuppliers" to listOf("ZS456")
+                "suppliers" to listOf("ZS456")
             ).asJsonObject().toString()
             val result = app(Request(GET, "/suppliers?type=direct")
                 .header("userId", "ZU123")
@@ -40,7 +40,7 @@ class ApiTest {
         fun `given no supplier type is provided, it defaults to direct suppliers`() {
             val expected: String = mapOf(
                 "companyId" to "ZC789",
-                "directSuppliers" to listOf("ZS456")
+                "suppliers" to listOf("ZS456")
             ).asJsonObject().toString()
             val result = app(Request(GET, "/suppliers")
                 .header("userId", "ZU123")
